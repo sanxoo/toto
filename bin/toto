@@ -1,4 +1,0 @@
-#!/usr/bin/bash
-
-cd ~/toto; python3 -m bin.work "$@"
-

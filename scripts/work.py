@@ -5,9 +5,10 @@ from uuid import UUID
 from typing import List
 from rich import print
 
+import importlib.util
 import json
 
-from flows.db import db
+from flows.share import db
 
 work = Typer(help="toto... work flow management cli")
 
@@ -71,6 +72,25 @@ def work_tags(
     work = db.update(work_id, part)
     print(work)
 
+@work.command("rm", help="remove the work flow from database")
+def work_rm(
+    work_id: Annotated[UUID, Argument(help="id of the work flow")]
+):
+    if not confirm("Are you sure?"): raise Abort()
+    db.delete(work_id)
+
+@work.command("test", help="test spec of the work flow")
+def work_test(
+    work_id: Annotated[UUID, Argument(help="id of the work flow")]
+):
+    work = db.select(work_id)
+    module_name = f"flows.{work['flow'].split('.')[0]}"
+    module_spec = importlib.util.find_spec(module_name)
+    module = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(module)
+    res = getattr(module, "test")(work_id)
+    print(res)
+
 @work.command("run", help="deploy the work flow to run")
 def work_run(
     work_id: Annotated[UUID, Argument(help="id of the work flow")],
@@ -84,13 +104,6 @@ def work_stop(
     work_id: Annotated[UUID, Argument(help="id of the work flow")]
 ):
     ...
-
-@work.command("rm", help="remove the work flow from database")
-def work_rm(
-    work_id: Annotated[UUID, Argument(help="id of the work flow")]
-):
-    if not confirm("Are you sure?"): raise Abort()
-    db.delete(work_id)
 
 if __name__ == "__main__":
     work(prog_name="toto")

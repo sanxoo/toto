@@ -1,6 +1,9 @@
 {
-    "url_or_query": "",
-    "params": {},
-    "bucket": "",
-    "object_name": ""
+    "url_or_query": "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty",
+    "params": {
+        "serviceKey": "rp+Ayp72Chlp0fJBzQrSYtINgORq+xn1G4LmyMTsnEFIZaolXfueTakbBm1wXbYj9g8z17Dm7owJ9kxn4jIuSQ==",
+        "numOfRows": 100, "pageNo": 1,
+        "sidoName": "전국"
+    },
+    "identifier": "toto.test"
 }
